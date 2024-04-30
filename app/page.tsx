@@ -39,6 +39,12 @@ export default function Home() {
   };
 
   useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+  
+    if (storedUsername) {
+      setIsLoggedIn(true);
+      setUsername(storedUsername);
+    }
     const fetchData = async () => {
       const dbref = ref(database, 'content');
       
@@ -54,18 +60,16 @@ export default function Home() {
       // Mendengarkan perubahan data secara real-time
       onValue(dbref, onDataChange);
   
-      return () => {
-        // Berhenti mendengarkan perubahan saat komponen unmount
-        off(dbref, 'value', onDataChange); // gunakan 'value' untuk mendengarkan perubahan data
-      };
+      // return () => {
+      //   // Berhenti mendengarkan perubahan saat komponen unmount
+      //   off(dbref, 'value', onDataChange); // gunakan 'value' untuk mendengarkan perubahan data
+      // };
     };
   
     fetchData();
   
-    // Set interval untuk polling setiap 5 detik (misalnya)
     const intervalId = setInterval(fetchData, 2000); // polling setiap 5 detik (5000 milidetik)
   
-    // Bersihkan interval saat komponen unmount
     return () => clearInterval(intervalId);
   }, []);
   

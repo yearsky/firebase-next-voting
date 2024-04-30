@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { ref, update } from 'firebase/database';
-import { database } from "../../utils/firebase-config"; // Import your Firebase database instance
+import React, { useState, useEffect } from 'react';
+import { ref, update, onValue, off } from 'firebase/database';
+import { database } from "../../utils/firebase-config";
 
 interface CardProps {
   id: string;
@@ -10,6 +10,21 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ id, content, likes }) => {
   const [likeCount, setLikeCount] = useState(likes);
+
+  useEffect(() => {
+    const dbRef = ref(database, `content/${id}`);
+
+    const handleDataChange = (snapshot: any) => {
+      const updatedLikes = snapshot.val().likes;
+      setLikeCount(updatedLikes);
+    };
+
+    onValue(dbRef, handleDataChange);
+
+    return () => {
+      off(dbRef, 'value', handleDataChange);
+    };
+  }, [id]);
 
   const handleLikeClick = () => {
     const dbRef = ref(database, `content/${id}`);
