@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState, ChangeEvent, FormEvent,useEffect } from "react";
 import { database } from "../utils/firebase-config";
 import { v4 as uuidv4 } from "uuid";
-import { getDatabase, ref, set,get,child,onValue } from "firebase/database";
+import { getDatabase, ref, set,get,off,child,onValue } from "firebase/database";
 import Modal from "./components/modal";
 import Card from "./components/card";
 
@@ -39,28 +39,28 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    
-    if (storedUsername) {
-      setIsLoggedIn(true);
-      setUsername(storedUsername);
-    }
-
     const fetchData = async () => {
-      const dbref = await ref(db,'content');
-      onValue(dbref, (snapshot) => {
+      const dbref = ref(database, 'content');
+      const onDataChange = (snapshot: any) => {
         if (snapshot.exists()) {
           const firebaseData = snapshot.val();
           const dataArray = Object.keys(firebaseData).map(key => ({ id: key, ...firebaseData[key] }));
           const sortedData = dataArray.slice().sort((a, b) => b.likes - a.likes);
-      
           setData(sortedData);
         }
-      });
+      };
+  
+      onValue(dbref, onDataChange);
+  
+      return () => {
+        off(dbref, 'value',onDataChange);
+      };
     };
-
-    fetchData()
+  
+    fetchData();
   }, []);
+  
+  
 
   const handleUsernameSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

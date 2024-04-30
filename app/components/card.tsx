@@ -13,9 +13,9 @@ const Card: React.FC<CardProps> = ({ id, content, likes }) => {
 
   const handleLikeClick = () => {
     const dbRef = ref(database, `content/${id}`);
-    update(dbRef, { likes: likeCount + 1 }) // Increment likes count by 1
+    update(dbRef, { likes: likeCount + 1 })
       .then(() => {
-        setLikeCount(likeCount + 1); // Update local state with new like count
+        setLikeCount(likeCount + 1);
       })
       .catch(error => {
         console.error("Error updating likes:", error);
