@@ -56,8 +56,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   return (
     <div className="fixed top-0 left-0 w-full min-h-full flex items-center justify-center bg-gray-500 bg-opacity-50">
       <div className="bg-white rounded-lg p-6 flex flex-col xl:w-1/2 relative">
-        <h2 className="text-xl text-center font-bold mb-4 mt-5">Ajukan Pertanyaan!</h2>
-        <h5 className="text-md text-center mb-4">Kamu hanya bisa mengajukan 1 pertanyaan saja maaf ya:(</h5>
+        <h2 className="text-xl text-center font-bold mb-4 mt-5">{commentAble == 'true' ? 'Kamu hanya bisa mengajukan 1 pertanyaan saja maaf ya:(' : 'Ajukan Pertanyaan!'}</h2>
+        {commentAble == 'true' ? (<></>) : 
+        (
+        <>
         <h5 className={`text-xl text-center text-green-400 font-bold mb-4 mt-5`} hidden={successMessage}>Berhasil Membuat Pertanyaan!🎉</h5>
         <div className="relative">
           <input
@@ -75,6 +77,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
           Kirim Pertanyaan
         </button>
         </form>
+        </>)}
+        
+       
         <button className='absolute right-2 top-2' onClick={onClose}>❌</button>
       </div>
     </div>

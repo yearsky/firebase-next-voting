@@ -57,20 +57,11 @@ export default function Home() {
         }
       };
   
-      // Mendengarkan perubahan data secara real-time
       onValue(dbref, onDataChange);
   
-      // return () => {
-      //   // Berhenti mendengarkan perubahan saat komponen unmount
-      //   off(dbref, 'value', onDataChange); // gunakan 'value' untuk mendengarkan perubahan data
-      // };
     };
   
     fetchData();
-  
-    const intervalId = setInterval(fetchData, 2000); // polling setiap 5 detik (5000 milidetik)
-  
-    return () => clearInterval(intervalId);
   }, []);
   
 
