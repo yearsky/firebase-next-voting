@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState, ChangeEvent, FormEvent,useEffect } from "react";
 import { database } from "../utils/firebase-config";
 import { v4 as uuidv4 } from "uuid";
-import { getDatabase, ref, set,get,off,child,onValue } from "firebase/database";
+import { getDatabase, ref, set,get,child,off,onValue } from "firebase/database";
 import Modal from "./components/modal";
 import Card from "./components/card";
 
@@ -41,6 +41,7 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       const dbref = ref(database, 'content');
+      
       const onDataChange = (snapshot: any) => {
         if (snapshot.exists()) {
           const firebaseData = snapshot.val();
@@ -50,16 +51,23 @@ export default function Home() {
         }
       };
   
+      // Mendengarkan perubahan data secara real-time
       onValue(dbref, onDataChange);
   
       return () => {
-        off(dbref, 'value',onDataChange);
+        // Berhenti mendengarkan perubahan saat komponen unmount
+        off(dbref, 'value', onDataChange); // gunakan 'value' untuk mendengarkan perubahan data
       };
     };
   
     fetchData();
-  }, []);
   
+    // Set interval untuk polling setiap 5 detik (misalnya)
+    const intervalId = setInterval(fetchData, 2000); // polling setiap 5 detik (5000 milidetik)
+  
+    // Bersihkan interval saat komponen unmount
+    return () => clearInterval(intervalId);
+  }, []);
   
 
   const handleUsernameSubmit = async (event: FormEvent<HTMLFormElement>) => {
