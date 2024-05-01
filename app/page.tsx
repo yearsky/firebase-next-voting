@@ -94,7 +94,7 @@ export default function Home() {
         {isLoggedIn ? (
           <>
           <h2 className="text-md sm:text-xl mx-4">
-            Silahkan sampaikan pertanyaan atau pendapat kamu, tenang ini bersifat Anonymous!😁👌
+            Silahkan sampaikan pertanyaan atau pendapat kamu😁👌
           </h2>
           
           {data.length == 0 ?  (
