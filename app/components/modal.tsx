@@ -38,7 +38,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       setSuccessMessage(false)
       setNotAvailCommentAble('true')
       setContent('')
-      onClose()
+      setTimeout(()=> onClose(),1500)
       localStorage.setItem('chanceWriteContent', 'false');
     } catch (error) {
       console.error("Error menyimpan username:", error);

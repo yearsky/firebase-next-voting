@@ -54,6 +54,9 @@ export default function Home() {
           const dataArray = Object.keys(firebaseData).map(key => ({ id: key, ...firebaseData[key] }));
           const sortedData = dataArray.slice().sort((a, b) => b.likes - a.likes);
           setData(sortedData);
+        }else
+        {
+          localStorage.setItem('chanceWriteContent', 'false');
         }
       };
   
@@ -94,16 +97,16 @@ export default function Home() {
         {isLoggedIn ? (
           <>
           <h2 className="text-md sm:text-xl mx-4">
-            Silahkan sampaikan pertanyaan atau pendapat kamu😁👌
+            Silahkan sampaikan pertanyaan atau pendapat kamu!
           </h2>
           
           {data.length == 0 ?  (
           <div className="mt-32">
-            <h1 className="text-2xl font-semibold">Belum Ada Data Pertanyaan 😣</h1>
+            <h1 className="text-2xl font-semibold text-nowrap bg-white p-2 rounded-full">Belum Ada Data Pertanyaan 😣</h1>
           </div>) : (
-              <div className="grid md:grid-cols-4 mt-20 gap-2 gap-y-4">
+              <div className="grid xl:grid-cols-4 mt-20 gap-2 gap-y-4">
               {data.map(item => (
-                <Card key={item.id} id={item.id} content={item.content} likes={item.likes}/>
+                <Card key={item.id} id={item.id} username={item.username} content={item.content} likes={item.likes}/>
               ))}
               </div>
           )}
