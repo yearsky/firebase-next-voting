@@ -57,3 +57,37 @@ body {
   100% { transform: translateY(0); }
 }
 
+.slide-in {
+  animation: slideIn 0.5s ease-in-out forwards;
+}
+
+.slide-out {
+  opacity: 0;
+  animation: slideOut 0.5s ease-in-out forwards, fadeOut 2s ease-in-out forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-150%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(-150%);
+  }
+}
+
+@keyframes fadeOut {
+  0% { transform: opacity(1); }
+  50% { transform: opacity(0.5); }
+  100% { transform: opacity(0); }
+}
+
+
