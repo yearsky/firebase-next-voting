@@ -90,4 +90,16 @@ body {
   100% { transform: opacity(0); }
 }
 
+.word-cloud-container {
+  position: relative;
+  width: 400px; /* Ubah ukuran container sesuai kebutuhan Anda */
+  height: 300px; /* Ubah ukuran container sesuai kebutuhan Anda */
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
 
+.word-cloud-word {
+  position: absolute;
+  font-family: Arial, sans-serif;
+  color: blue; /* Warna teks */
+}

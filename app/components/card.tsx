@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ref, update, onValue, off } from 'firebase/database';
 import { database } from "../../utils/firebase-config";
+import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 
 interface CardProps {
   id: string;
@@ -15,45 +16,45 @@ const Card: React.FC<CardProps> = ({ id, content,username, likes }) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
-    const dbRef = ref(database, `content/${id}`);
+    const docRef = doc(database, 'content', id);
 
-    const handleDataChange = (snapshot: any) => {
-      const updatedLikes = snapshot.val().likes;
-      setLikeCount(updatedLikes);
-    };
-
-    onValue(dbRef, handleDataChange);
+    const unsubscribe = onSnapshot(docRef, (docSnapshot) => {
+      if (docSnapshot.exists()) {
+        const data = docSnapshot.data();
+        if (data) {
+          setLikeCount(data.likes);
+        }
+      }
+    });
 
     const likedStatus = localStorage.getItem(`liked_${id}`);
     if (likedStatus) {
       setIsLiked(true);
     }
 
-    return () => {
-      off(dbRef, 'value', handleDataChange);
-    };
+    return unsubscribe;
   }, [id]);
 
-  const handleLikeClick = () => {
+  const handleLikeClick = async () => {
     if (!isLiked) {
-      const dbRef = ref(database, `content/${id}`);
-      update(dbRef, { likes: likeCount + 1 })
-        .then(() => {
-          setLikeCount(likeCount + 1);
-          setIsLiked(true);
-          localStorage.setItem(`liked_${id}`, 'true');
-          // Trigger animation
-          setIsAnimating(true);
-          setTimeout(() => setIsAnimating(false), 1000);
-        })
-        .catch(error => {
-          console.error("Error updating likes:", error);
+      const docRef = doc(database, 'content', id);
+      try {
+        await updateDoc(docRef, {
+          likes: likeCount + 1
         });
+        setLikeCount(likeCount + 1);
+        setIsLiked(true);
+        localStorage.setItem(`liked_${id}`, 'true');
+        setIsAnimating(true);
+        setTimeout(() => setIsAnimating(false), 1000);
+      } catch (error) {
+        console.error("Error updating likes:", error);
+      }
     }
   };
 
   return (
-    <div className="relative border border-gray-700 rounded-md p-5 card">
+    <div className="relative border border-gray-700 rounded-md p-5 card w-full">
       <h1 className='absolute text-center -top-2 left-1/2 transform -translate-x-1/2 bg-red-400 rounded-full text-white w-3/4 p-1 truncate'>{username}</h1>
       <h1 className="mb-10 mt-5">{content}</h1>
       <div className="absolute bottom-0 right-10 left-10">
