@@ -20,6 +20,13 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose,onSuccessMessage }) => {
   const [disabledBtn, setDisabledBtn] = useState(true);
 
   useEffect(() => {
+    if(content.length === 0)
+    {
+      setDisabledBtn(true)
+    }else
+    {
+      setDisabledBtn(false)
+    }
     const ableToComment = localStorage.getItem('chanceWriteContent');
     if (ableToComment == 'false') {
       setNotAvailCommentAble('true');
@@ -34,7 +41,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose,onSuccessMessage }) => {
 
     fetchData();
 
-  }, []);
+  }, [content]);
 
   if (!isOpen) return null;
 
@@ -43,13 +50,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose,onSuccessMessage }) => {
     try {
       if (!disabledBtn) {
         const username = localStorage.getItem('username');
-        const db = database;
-        await addDoc(collection(database, 'content'), {
-          username: username,
-          content: content,
-          likes: 0,
-        });
-
+  
+        const addDocumentsPromise = addDocumentsAsync(username,content);
+        
         onSuccessMessage(true);
         setContent('');
         setSuccessMessage(true);
@@ -58,11 +61,25 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose,onSuccessMessage }) => {
           setNotAvailCommentAble('true');
         }, 1500);
         localStorage.setItem('chanceWriteContent', 'false');
+  
+        await addDocumentsPromise;
       }
     } catch (error) {
       console.error("Error menyimpan konten:", error);
     }
   };
+  
+  // Function to handle asynchronous document additions
+  async function addDocumentsAsync(username:any,content:any) {
+    const promise = await addDoc(collection(database, 'content'), {
+      likes: 0,
+      username: username,
+      content: content,
+    });
+   
+    return promise;
+  }
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newText = e.target.value;
@@ -79,7 +96,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose,onSuccessMessage }) => {
       setDisabledBtn(false)
     }
   };
-
+console.log(disabledBtn)
   return (
     <div className="fixed z-50 top-0 left-0 w-full min-h-full flex items-center justify-center bg-gray-500 bg-opacity-50">
       <div className="bg-white rounded-lg p-6 flex flex-col xl:w-1/2 relative">

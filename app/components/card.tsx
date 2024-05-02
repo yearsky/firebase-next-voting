@@ -56,7 +56,7 @@ const Card: React.FC<CardProps> = ({ id, content,username, likes }) => {
   return (
     <div className="relative border border-gray-700 rounded-md p-5 card w-full">
       <h1 className='absolute text-center -top-2 left-1/2 transform -translate-x-1/2 bg-red-400 rounded-full text-white w-3/4 p-1 truncate'>{username}</h1>
-      <h1 className="mb-10 mt-5">{content}</h1>
+      <h1 className="mb-10 mt-5 w-full">{content}</h1>
       <div className="absolute bottom-0 right-10 left-10">
         <button 
           className={`border border-gray-500 bg-white p-1 rounded-full mb-2 mr-1 ${isLiked ? 'opacity-50 cursor-not-allowed' : ''}`} 
