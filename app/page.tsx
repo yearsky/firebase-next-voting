@@ -1,32 +1,30 @@
 "use client";
 import Image from "next/image";
-import { useState, ChangeEvent, FormEvent,useEffect,useRef } from "react";
+import { useState, ChangeEvent, FormEvent, useEffect, useRef } from "react";
 import { database } from "../utils/firebase-config";
 import QnaLayout from "./components/QnaLayout";
 import WordCloud from "./components/WordCloud";
 import { addDoc, collection } from "firebase/firestore";
+import SuccessMessage from "./components/successCard";
 
 interface User {
   username: string;
 }
 
 function ITPLogo(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <Image
-      src="/ITP.jpg"
-      width={500}
-      height={500}
-      alt="ITP"
-    />
-  );
+  return <Image src="/ITP.jpg" width={500} height={500} alt="ITP" />;
 }
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
+  const [successMessage, setSuccessMessage] = useState(false);
   const db = database;
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setSuccessMessage(false);
+    }, 5000);
     const storedUsername = localStorage.getItem("username");
 
     if (storedUsername) {
@@ -34,14 +32,15 @@ export default function Home() {
       setUsername(storedUsername);
     }
 
-  }, []);
+    return () => clearTimeout(timer);
+  }, [successMessage]);
 
   const handleUsernameSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       setUsername(username);
 
-      await addDoc(collection(db, 'users'), {
+      await addDoc(collection(db, "users"), {
         username: username,
       });
 
@@ -56,8 +55,12 @@ export default function Home() {
     setUsername(event.target.value);
   };
 
+  const handleSuccessMessage = () => {
+    setSuccessMessage(true);
+  };
+
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen py-2">
+    <div className="relative flex flex-col items-center justify-center min-h-screen">
       <main className="flex flex-col items-center flex-1 px-4 sm:px-20 text-center">
         <div className="flex justify-center items-center bg-white rounded-full w-16 sm:w-24 h-16 sm:h-24 my-8">
           <ITPLogo className="h-8 sm:h-16 invert p-3 mb-1" />
@@ -67,8 +70,9 @@ export default function Home() {
         </h1>
         {isLoggedIn ? (
           <>
-            {/* <WordCloud/> */}
-            <QnaLayout/>
+            <SuccessMessage successMessage={successMessage} />
+            <WordCloud onSuccess={handleSuccessMessage} />
+            {/* <QnaLayout/> */}
           </>
         ) : (
           <div className="mt-4">

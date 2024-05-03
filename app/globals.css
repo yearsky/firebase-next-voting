@@ -7,19 +7,19 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-  --bumble-yellow: #FFC629;
-  --situational-ivory: #FFFFF9;
+  --bumble-yellow: #ffc629;
+  --situational-ivory: #fffff9;
   --shadow: rgba(0, 0, 0, 0.2);
-  --banana: #F3EFA1;
-  --lemon: #FDDA64;
-  --bumble-black: #1D252C;
-  --plum: #572A31;
-  --bff-blue: #009ABF;
-  --bez: cubic-bezier(0.680, -0.550, 0.265, 1.550);
+  --banana: #f3efa1;
+  --lemon: #fdda64;
+  --bumble-black: #1d252c;
+  --plum: #572a31;
+  --bff-blue: #009abf;
+  --bez: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-*{
-  font-family: 'Poppins', sans-serif;
+* {
+  font-family: "Poppins", sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -44,6 +44,17 @@ body {
   display: flex;
   flex-direction: column;
 }
+.btmCard {
+  margin: 2rem;
+  transition: all 200ms var(--bez);
+  background: var(--situational-ivory);
+  border-radius: 0.5rem;
+  box-shadow: 0px 30px 20px -10px var(--shadow);
+  max-width: 100%;
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+}
 
 @layer utilities {
   .text-balance {
@@ -52,9 +63,15 @@ body {
 }
 
 @keyframes bounce {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0); }
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .slide-in {
@@ -85,16 +102,19 @@ body {
 }
 
 @keyframes fadeOut {
-  0% { transform: opacity(1); }
-  50% { transform: opacity(0.5); }
-  100% { transform: opacity(0); }
+  0% {
+    transform: opacity(1);
+  }
+  50% {
+    transform: opacity(0.5);
+  }
+  100% {
+    transform: opacity(0);
+  }
 }
 
 .word-cloud-container {
-  position: relative;
-  width: 400px; /* Ubah ukuran container sesuai kebutuhan Anda */
-  height: 300px; /* Ubah ukuran container sesuai kebutuhan Anda */
-  border: 1px solid #ccc;
+  /* position: relative; */
   overflow: hidden;
 }
 
