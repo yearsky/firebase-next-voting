@@ -33,7 +33,19 @@ const WordCloud: React.FC<WordCloudProps> = ({ onSuccess }) => {
   const maxWidth = 100; // Ganti dengan lebar maksimum yang diinginkan
   const maxHeight = 100;
 
-  const colors = ["#FF5733", "#33FF57", "#5733FF", "#FF33D1", "#33D1FF"];
+  const colors = [
+    "#c23531",
+    "#2f4554",
+    "#61a0a8",
+    "#d48265",
+    "#91c7ae",
+    "#749f83",
+    "#ca8622",
+    "#bda29a",
+    "#6e7074",
+    "#546570",
+    "#c4ccd3",
+  ];
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -65,8 +77,8 @@ const WordCloud: React.FC<WordCloudProps> = ({ onSuccess }) => {
     for (let i = 0; i < words.length; i++) {
       const word = words[i];
       const size = Math.floor(Math.random() * 30) + 30;
-      let left = Math.min(Math.floor(Math.random() * (maxWidth - 30)), 80);
-      let top = Math.min(Math.floor(Math.random() * (maxHeight - 30)), 80);
+      let left = Math.min(Math.floor(Math.random() * (maxWidth - size)), 80);
+      let top = Math.min(Math.floor(Math.random() * (maxHeight - size)), 80);
       const rotate = Math.floor(Math.random() * 180) - 90;
       const color = colors[Math.floor(Math.random() * colors.length)];
 
@@ -117,24 +129,19 @@ const WordCloud: React.FC<WordCloudProps> = ({ onSuccess }) => {
     const currentDate = new Date();
     const timestamp = Timestamp.fromDate(currentDate);
     const username = localStorage.getItem("username");
-    const promises = [];
 
-    for (let i = 0; i < 300; i++) {
-      promises.push(
-        addDoc(collection(database, "wordClouds"), {
-          username: username,
-          word: word,
-          createdAt: timestamp,
-        })
-      );
-    }
+    const promise = addDoc(collection(database, "wordClouds"), {
+      username: username,
+      word: word,
+      createdAt: timestamp,
+    });
 
-    return Promise.all(promises);
+    return promise;
   }
 
   return (
     <div className="flex flex-col justify-center items-center gap-y-6 w-full">
-      <div className="bg-white w-[50vh] md:w-[150vh] h-[50vh] rounded-md relative">
+      <div className="bg-white w-[50vh] md:w-[150vh] h-[50vh] rounded-md relative overflow-hidden">
         {data.map((item, index) => (
           <div key={index}>
             {item.word.map((value: any, wordIndex: any) => (
@@ -142,6 +149,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ onSuccess }) => {
                 key={wordIndex}
                 className="absolute"
                 style={{
+                  overflow: "hidden",
                   fontSize: `${value.size}px`,
                   left: `${value.left}%`,
                   top: `${value.top}%`,
