@@ -1,23 +1,35 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import Image from "next/image";
 import { useState, ChangeEvent, FormEvent, useEffect, useRef } from "react";
 import { database } from "../utils/firebase-config";
+import store, {
+  AppDispatch,
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+} from "./redux/store";
+import {
+  selectUsername,
+  setIsLoggedInHooks,
+  selectIsLoggedIn,
+  setUsername,
+} from "./redux/userSlice";
 import QnaLayout from "./components/QnaLayout";
 import WordCloud from "./components/WordCloud";
 import { addDoc, collection } from "firebase/firestore";
 import SuccessMessage from "./components/successCard";
-
-interface User {
-  username: string;
-}
 
 function ITPLogo(props: React.SVGProps<SVGSVGElement>) {
   return <Image src="/ITP.jpg" width={500} height={500} alt="ITP" />;
 }
 
 export default function Home() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState("");
+  const dispatch = useAppDispatch();
+  const storedUsername = useAppSelector(selectUsername);
+  const isLogginDevice = useAppSelector(selectIsLoggedIn);
+  const [isLoggedInThis, setIsLoggedIn] = useState(false);
+  const [usernameState, setUsernameState] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState(false);
   const db = database;
 
@@ -25,40 +37,40 @@ export default function Home() {
     const timer = setTimeout(() => {
       setSuccessMessage(false);
     }, 5000);
-    const storedUsername = localStorage.getItem("username");
 
     if (storedUsername) {
       setIsLoggedIn(true);
-      setUsername(storedUsername);
+      setUsernameState(storedUsername);
     }
 
     return () => clearTimeout(timer);
-  }, [successMessage]);
+  }, [storedUsername, isLogginDevice]);
 
   const handleUsernameSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      setUsername(username);
+      setUsernameState(usernameState);
 
       await addDoc(collection(db, "users"), {
-        username: username,
+        username: usernameState,
       });
 
+      dispatch(setUsername(usernameState));
+      dispatch(setIsLoggedInHooks(true));
       setIsLoggedIn(true);
-      localStorage.setItem("username", username);
     } catch (error) {
       console.error("Error menyimpan username:", error);
     }
   };
 
   const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value);
+    setUsernameState(event.target.value);
   };
 
   const handleSuccessMessage = () => {
     setSuccessMessage(true);
   };
-
+  console.log(isLogginDevice);
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen">
       <main className="flex flex-col items-center flex-1 px-4 sm:px-20 text-center">
@@ -68,7 +80,7 @@ export default function Home() {
         <h1 className="text-lg sm:text-2xl font-bold mb-2">
           ITP SUNDAY - KOMUNIKASI🎉
         </h1>
-        {isLoggedIn ? (
+        {isLogginDevice ? (
           <>
             <SuccessMessage successMessage={successMessage} />
             <WordCloud />
@@ -86,7 +98,7 @@ export default function Home() {
                 required
                 type="text"
                 name="username"
-                value={username}
+                value={usernameState}
                 onChange={handleUsernameChange}
               />
               <button

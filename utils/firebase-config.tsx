@@ -20,19 +20,19 @@ const firebaseConfig = {
 
 // Konfigurasi Firebase untuk aplikasi web kedua
 const firebaseConfigSecondary = {
-  apiKey: "AIzaSyArttKVzGg7XtZGFACvKqLaw68mmRJLG3c",
-  authDomain: "secondary-db-ae5a8.firebaseapp.com",
+  apiKey: "AIzaSyBjjV7kKu76YQoOISrFxgmGUDRD9E2Hhu8",
+  authDomain: "nextjs-voting.firebaseapp.com",
   databaseURL:
-    "https://secondary-db-ae5a8-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "secondary-db-ae5a8",
-  storageBucket: "secondary-db-ae5a8.appspot.com",
-  messagingSenderId: "204528471659",
-  appId: "1:204528471659:web:722687f66a1bb1ed1ceb2e",
-  measurementId: "G-PNLQTL398E",
+    "https://nextjs-voting-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "nextjs-voting",
+  storageBucket: "nextjs-voting.appspot.com",
+  messagingSenderId: "909153346392",
+  appId: "1:909153346392:web:136fcc6c40f317a5667b2d",
+  measurementId: "G-01WWQK735C",
 };
 
 // Initialize Firebase untuk aplikasi pertama
-export const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfigSecondary);
 export const database = getFirestore(app);
 
 // // Initialize Firebase untuk aplikasi kedua
