@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/d3": "^7.4.3",
+    "canvas": "^2.11.2",
+    "d3": "^7.9.0",
     "d3-cloud": "^1.2.7",
     "firebase": "^10.11.1",
     "next": "14.2.3",

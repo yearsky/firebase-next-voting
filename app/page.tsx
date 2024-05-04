@@ -71,7 +71,8 @@ export default function Home() {
         {isLoggedIn ? (
           <>
             <SuccessMessage successMessage={successMessage} />
-            <WordCloud onSuccess={handleSuccessMessage} />
+            <WordCloud />
+            {/* <WordCloud onSuccess={handleSuccessMessage} /> */}
             {/* <QnaLayout/> */}
           </>
         ) : (
