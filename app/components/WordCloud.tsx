@@ -145,7 +145,7 @@ const WordCloud = () => {
       console.log("error: " + error);
     } finally {
       setIsLoading(false);
-      closeModal();
+      // closeModal();
     }
   };
 
@@ -176,8 +176,8 @@ const WordCloud = () => {
           <div ref={containerRef}></div>
         </div>
         <div
-          className={`fixed z-50 md:top-0  w-full min-h-full ${
-            !isOpen && !isAnswered ? "md:flex" : "hidden"
+          className={`fixed z-50 md:top-0 bottom-0  w-full min-h-full ${
+            !isOpen ? "md:flex" : "hidden"
           } items-center justify-center bg-gray-500 bg-opacity-50`}
         >
           <div className="bg-white rounded-lg p-6 xl:w-1/2 relative">
@@ -195,15 +195,16 @@ const WordCloud = () => {
               placeholder="Jawaban Kamu..."
               value={sentence}
               onChange={handleInputChange}
+              hidden={isAnswered}
               className="border mb-4 border-gray-400 w-full p-3 xl:p-4 rounded-md"
             />
             <button
               onClick={generateWordCloud}
-              disabled={isLoading}
+              disabled={isLoading || isAnswered}
               className="px-5 py-2 mt-2 rounded bg-indigo-500 text-white 
   disabled:bg-gray-500/80 disabled:cursor-not-allowed"
             >
-              Kirim Jawaban
+              {isAnswered ? "Jawaban Sudah Terkirim👍" : "Kirim Jawaban"}
             </button>
           </div>
         </div>
