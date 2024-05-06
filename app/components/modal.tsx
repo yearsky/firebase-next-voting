@@ -123,13 +123,13 @@ const Modal: React.FC<ModalProps> = ({
           ></span>
           <span
             className={`${
-              section == "Polls" ? "bg-blue-400" : "bg-gray-400"
+              section == "qna" ? "bg-blue-400" : "bg-gray-400"
             } w-14 h-5 p-2 rounded-full`}
           ></span>
         </div>
         <h4 className={`text-lg text-slate-500 text-center font-bold mt-5`}>
           Pertanyaan Ke-
-          {section == "wordClouds" ? "1" : section == "qna" ? "2" : "3"}
+          {section == "wordClouds" ? "1" : section == "Polls" ? "2" : "3"}
         </h4>
         <h2 className="mb-4 text-xl ">{questions}</h2>
         {section == "Polls" ? (
