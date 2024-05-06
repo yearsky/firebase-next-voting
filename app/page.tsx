@@ -17,8 +17,14 @@ import {
 } from "./redux/userSlice";
 import QnaLayout from "./components/QnaLayout";
 import WordCloud from "./components/WordCloud";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, onSnapshot, query } from "firebase/firestore";
 import SuccessMessage from "./components/successCard";
+import {
+  clearAnswer,
+  clearChanceAnswer,
+  setChanceAnswer,
+  setIsAnswered,
+} from "./redux/wordSlice";
 
 function ITPLogo(props: React.SVGProps<SVGSVGElement>) {
   return <Image src="/ITP.jpg" width={500} height={500} alt="ITP" />;
@@ -26,12 +32,25 @@ function ITPLogo(props: React.SVGProps<SVGSVGElement>) {
 
 export default function Home() {
   const dispatch = useAppDispatch();
+  const [questions, setQuestions] = useState<
+    { text: string; section: string }[]
+  >([]);
   const storedUsername = useAppSelector(selectUsername);
   const isLogginDevice = useAppSelector(selectIsLoggedIn);
   const [isLoggedInThis, setIsLoggedIn] = useState(false);
+  const [isDataUpdated, setIsDataUpdated] = useState(false);
   const [usernameState, setUsernameState] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState(false);
+  const [data, setData] = useState<any[]>([]);
   const db = database;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsDataUpdated(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [isDataUpdated]); //
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -41,6 +60,19 @@ export default function Home() {
     if (storedUsername) {
       setIsLoggedIn(true);
       setUsernameState(storedUsername);
+
+      const unsubscribe = onSnapshot(
+        query(collection(database, "activeSections")),
+        (querySnapshot) => {
+          const dataArray = querySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+          }));
+          setData(dataArray);
+          setIsDataUpdated(true);
+        }
+      );
+
+      return unsubscribe;
     }
 
     return () => clearTimeout(timer);
@@ -83,8 +115,29 @@ export default function Home() {
         {isLogginDevice ? (
           <>
             <SuccessMessage successMessage={successMessage} />
-            <WordCloud onSuccess={handleSuccessMessage} />
-            {/* <QnaLayout/> */}
+            {data.length > 0 ? (
+              <>
+                {isDataUpdated ? (
+                  <div className="flex justify-center items-center h-[50vh]">
+                    <h2 className="text-center font-bold animate-bounce">
+                      Tunggu Sebentar ya!😁
+                    </h2>
+                  </div>
+                ) : (
+                  <>
+                    {data.map((item) => {
+                      return item.active && item.section === "wordClouds" ? (
+                        <WordCloud onSuccess={handleSuccessMessage} />
+                      ) : item.active && item.section === "qna" ? (
+                        <QnaLayout />
+                      ) : null;
+                    })}
+                  </>
+                )}
+              </>
+            ) : (
+              ""
+            )}
           </>
         ) : (
           <div className="mt-4">
@@ -101,7 +154,7 @@ export default function Home() {
                 onChange={handleUsernameChange}
               />
               <button
-                className="bg-blueflex items-center justify-center mt-2 px-4 h-10 text-lg border bg-black text-white rounded-md w-24 focus:outline-none focus:ring focus:ring-blue-300 focus:bg-gray-800"
+                className="bg-blue flex items-center justify-center mt-2 px-4 h-10 text-lg border bg-black text-white rounded-md w-24 focus:outline-none focus:ring focus:ring-blue-300 focus:bg-gray-800"
                 type="submit"
               >
                 Mulai

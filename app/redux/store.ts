@@ -5,6 +5,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // menggunakan localStorage
 import wordSlice from "./wordSlice";
+import questionSlice from "./questionSlice";
 
 const persistConfig = {
   key: "root",

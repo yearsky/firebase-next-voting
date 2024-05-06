@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import cloud from "d3-cloud";
 import {
+  QuerySnapshot,
   Timestamp,
   addDoc,
   collection,
@@ -9,11 +10,19 @@ import {
   onSnapshot,
   orderBy,
   query,
+  where,
 } from "firebase/firestore";
 import { database } from "@/utils/firebase-config";
 import { useAppDispatch, useAppSelector } from "../redux/store";
-import { selectAnswer, setIsAnswered } from "../redux/wordSlice";
+import {
+  selectAnswer,
+  setChanceAnswer,
+  setIsAnswered,
+  clearChanceAnswer,
+  setSectionProps,
+} from "../redux/wordSlice";
 import { clearUser, selectUsername } from "../redux/userSlice";
+import Modal from "./modal";
 
 interface WordCloudProps {
   onSuccess: () => void;
@@ -100,6 +109,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ onSuccess }) => {
   const isAnswered = useAppSelector(selectAnswer);
   const currentUsername = useAppSelector(selectUsername);
   const [words, setWords] = useState<{ text: string; size: number }[]>([]);
+  const [questions, setQuestions] = useState("");
   const [isOpen, setModalOpen] = useState(false);
   const [sentence, setSentence] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -125,6 +135,8 @@ const WordCloud: React.FC<WordCloudProps> = ({ onSuccess }) => {
       );
 
       return () => unsubscribe();
+    } else {
+      questionsFirestore();
     }
   }, []);
 
@@ -144,11 +156,15 @@ const WordCloud: React.FC<WordCloudProps> = ({ onSuccess }) => {
     setModalOpen(true);
   };
 
-  const generateWordCloud = async () => {
+  const generateWordCloud = async (content: string) => {
     try {
       setIsLoading(true);
-      await addDocumentsAsync(sentence);
+      await addDocumentsAsync(content);
       dispatch(setIsAnswered(true));
+      dispatch(setSectionProps("wordClouds"));
+      dispatch(setChanceAnswer(0));
+      dispatch(clearChanceAnswer());
+      // onSuccess();
     } catch (error) {
       console.log("error: " + error);
     } finally {
@@ -172,6 +188,29 @@ const WordCloud: React.FC<WordCloudProps> = ({ onSuccess }) => {
     return promise;
   }
 
+  const questionsFirestore = async () => {
+    try {
+      setIsLoading(true);
+      await getQuestions();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  async function getQuestions() {
+    const q = query(
+      collection(database, "questions"),
+      where("section", "==", "wordClouds")
+    );
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      setQuestions(doc.data().text);
+    });
+    return querySnapshot;
+  }
+
   return (
     <>
       <div className="flex flex-col justify-center items-center gap-y-6 w-full">
@@ -187,37 +226,12 @@ const WordCloud: React.FC<WordCloudProps> = ({ onSuccess }) => {
         )}
 
         {currentUsername !== "ITPGo123" && (
-          <div
-            className={`fixed z-50 md:top-0 bottom-0  w-full min-h-full ${
-              !isOpen ? "md:flex" : "hidden"
-            } items-center justify-center bg-gray-500 bg-opacity-50`}
-          >
-            <div className="bg-white rounded-lg p-6 xl:w-1/2 relative">
-              <h4
-                className={`text-lg text-center font-bold mt-5 text-slate-500`}
-              >
-                Pertanyaan
-              </h4>
-              <h4 className={`text-xl mb-4 `}>
-                Bahasa Inggrisnya aku cinta kamu apa?
-              </h4>
-              <input
-                placeholder="Jawaban Kamu..."
-                value={sentence}
-                onChange={handleInputChange}
-                hidden={isAnswered}
-                className="border mb-4 border-gray-400 w-full p-3 xl:p-4 rounded-md"
-              />
-              <button
-                onClick={generateWordCloud}
-                disabled={isAnswered}
-                className="px-5 py-2 mt-2 rounded bg-indigo-500 text-white 
-  disabled:bg-gray-500/80 disabled:cursor-not-allowed"
-              >
-                {isAnswered ? "Jawaban Sudah Terkirim👍" : "Kirim Jawaban"}
-              </button>
-            </div>
-          </div>
+          <Modal
+            isOpen={true}
+            onClose={closeModal}
+            section="wordClouds"
+            onSubmit={generateWordCloud}
+          />
         )}
       </div>
     </>
