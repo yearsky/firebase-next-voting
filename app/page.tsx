@@ -129,10 +129,10 @@ export default function Home() {
                     {data.map((item) => {
                       return item.active && item.section === "wordClouds" ? (
                         <WordCloud onSuccess={handleSuccessMessage} />
-                      ) : item.active && item.section === "qna" ? (
-                        <QnaLayout />
-                      ) : (
+                      ) : item.active && item.section === "Polls" ? (
                         <Polls />
+                      ) : (
+                        <QnaLayout />
                       );
                     })}
                   </>

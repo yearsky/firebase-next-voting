@@ -62,7 +62,12 @@ export default function Polls() {
   useEffect(() => {
     async function fetchData() {
       const pollData: any[] = [];
-      const categoryData: any = { capability: 0 }; // Data sementara untuk menghitung kategori
+      const categoryData: any = {
+        capability: 0,
+        clarity: 0,
+        continuity: 0,
+        channels: 0,
+      }; // Data sementara untuk menghitung kategori
       const querySnapshot = await getDocs(collection(database, "livePolls"));
       querySnapshot.forEach((doc) => {
         pollData.push(doc.data().text);
