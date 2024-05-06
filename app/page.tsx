@@ -102,7 +102,7 @@ export default function Home() {
   const handleSuccessMessage = () => {
     setSuccessMessage(true);
   };
-
+  console.log(data);
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen">
       <main className="flex flex-col items-center flex-1 px-4 sm:px-20 text-center">
@@ -154,7 +154,7 @@ export default function Home() {
                 onChange={handleUsernameChange}
               />
               <button
-                className="bg-blue flex items-center justify-center mt-2 px-4 h-10 text-lg border bg-black text-white rounded-md w-24 focus:outline-none focus:ring focus:ring-blue-300 focus:bg-gray-800"
+                className="bg-blueflex items-center justify-center mt-2 px-4 h-10 text-lg border bg-black text-white rounded-md w-24 focus:outline-none focus:ring focus:ring-blue-300 focus:bg-gray-800"
                 type="submit"
               >
                 Mulai
