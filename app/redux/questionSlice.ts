@@ -30,7 +30,5 @@ const questionSlice = createSlice({
 
 export const { setSection, setActiveSection, clearSection } =
   questionSlice.actions;
-export const currentActiveSection = (state: RootState) =>
-  state.questionSection.section;
 
 export default questionSlice.reducer;
