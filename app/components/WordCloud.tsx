@@ -13,6 +13,11 @@ import {
 import { database } from "@/utils/firebase-config";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 import { selectAnswer, setIsAnswered } from "../redux/wordSlice";
+import { clearUser, selectUsername } from "../redux/userSlice";
+
+interface WordCloudProps {
+  onSuccess: () => void;
+}
 
 const drawWordCloud = async (
   words: { text: string; size: number }[],
@@ -89,35 +94,38 @@ const drawWordCloud = async (
   layout.start();
 };
 
-const WordCloud = () => {
+const WordCloud: React.FC<WordCloudProps> = ({ onSuccess }) => {
   const containerRef = useRef(null);
   const dispatch = useAppDispatch();
   const isAnswered = useAppSelector(selectAnswer);
+  const currentUsername = useAppSelector(selectUsername);
   const [words, setWords] = useState<{ text: string; size: number }[]>([]);
   const [isOpen, setModalOpen] = useState(false);
   const [sentence, setSentence] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      query(collection(database, "wordClouds"), orderBy("createdAt", "desc")),
-      (snapshot) => {
-        const dataArray = snapshot.docs.map((doc) => ({
-          text: doc.data().text,
-          size: doc.data().size,
-        }));
-        setWords(dataArray);
-        if (containerRef.current) {
-          drawWordCloud(dataArray, containerRef.current)
-            .then(() => setIsLoading(false))
-            .catch((error) =>
-              console.error("Error drawing word cloud:", error)
-            );
+    if (currentUsername === "ITPGo123") {
+      const unsubscribe = onSnapshot(
+        query(collection(database, "wordClouds"), orderBy("createdAt", "desc")),
+        (snapshot) => {
+          const dataArray = snapshot.docs.map((doc) => ({
+            text: doc.data().text,
+            size: doc.data().size,
+          }));
+          setWords(dataArray);
+          if (containerRef.current) {
+            drawWordCloud(dataArray, containerRef.current)
+              .then(() => setIsLoading(false))
+              .catch((error) =>
+                console.error("Error drawing word cloud:", error)
+              );
+          }
         }
-      }
-    );
+      );
 
-    return () => unsubscribe();
+      return () => unsubscribe();
+    }
   }, []);
 
   useEffect(() => {
@@ -167,47 +175,50 @@ const WordCloud = () => {
   return (
     <>
       <div className="flex flex-col justify-center items-center gap-y-6 w-full">
-        <div className="bg-white hidden md:flex md:w-[180vh] h-[60vh] rounded-md relative overflow-auto">
-          {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center animate-pulse bg-gray-400 text-white">
-              Tunggu Sebentar yaa😉
-            </div>
-          )}
-          <div ref={containerRef}></div>
-        </div>
-        <div
-          className={`fixed z-50 md:top-0 bottom-0  w-full min-h-full ${
-            !isOpen ? "md:flex" : "hidden"
-          } items-center justify-center bg-gray-500 bg-opacity-50`}
-        >
-          <div className="bg-white rounded-lg p-6 xl:w-1/2 relative">
-            <h4 className={`text-lg text-center font-bold mt-5 text-slate-500`}>
-              Pertanyaan
-            </h4>
-            <h4
-              className={`text-xl mb-4 ${
-                isLoading ? "bg-gray-400 animate-pulse text-gray-400" : ""
-              }`}
-            >
-              Bahasa Inggrisnya aku cinta kamu apa?
-            </h4>
-            <input
-              placeholder="Jawaban Kamu..."
-              value={sentence}
-              onChange={handleInputChange}
-              hidden={isAnswered}
-              className="border mb-4 border-gray-400 w-full p-3 xl:p-4 rounded-md"
-            />
-            <button
-              onClick={generateWordCloud}
-              disabled={isLoading || isAnswered}
-              className="px-5 py-2 mt-2 rounded bg-indigo-500 text-white 
-  disabled:bg-gray-500/80 disabled:cursor-not-allowed"
-            >
-              {isAnswered ? "Jawaban Sudah Terkirim👍" : "Kirim Jawaban"}
-            </button>
+        {currentUsername === "ITPGo123" && (
+          <div className="bg-white hidden md:flex md:w-[180vh] h-[60vh] rounded-md relative overflow-x-hidden overflow-y-auto">
+            {isLoading && (
+              <div className="absolute inset-0 flex items-center justify-center animate-pulse bg-gray-400 text-white">
+                Tunggu Sebentar yaa😉
+              </div>
+            )}
+            <div ref={containerRef}></div>
           </div>
-        </div>
+        )}
+
+        {currentUsername !== "ITPGo123" && (
+          <div
+            className={`fixed z-50 md:top-0 bottom-0  w-full min-h-full ${
+              !isOpen ? "md:flex" : "hidden"
+            } items-center justify-center bg-gray-500 bg-opacity-50`}
+          >
+            <div className="bg-white rounded-lg p-6 xl:w-1/2 relative">
+              <h4
+                className={`text-lg text-center font-bold mt-5 text-slate-500`}
+              >
+                Pertanyaan
+              </h4>
+              <h4 className={`text-xl mb-4 `}>
+                Bahasa Inggrisnya aku cinta kamu apa?
+              </h4>
+              <input
+                placeholder="Jawaban Kamu..."
+                value={sentence}
+                onChange={handleInputChange}
+                hidden={isAnswered}
+                className="border mb-4 border-gray-400 w-full p-3 xl:p-4 rounded-md"
+              />
+              <button
+                onClick={generateWordCloud}
+                disabled={isAnswered}
+                className="px-5 py-2 mt-2 rounded bg-indigo-500 text-white 
+  disabled:bg-gray-500/80 disabled:cursor-not-allowed"
+              >
+                {isAnswered ? "Jawaban Sudah Terkirim👍" : "Kirim Jawaban"}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

@@ -70,7 +70,7 @@ export default function Home() {
   const handleSuccessMessage = () => {
     setSuccessMessage(true);
   };
-  console.log(isLogginDevice);
+
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen">
       <main className="flex flex-col items-center flex-1 px-4 sm:px-20 text-center">
@@ -83,8 +83,7 @@ export default function Home() {
         {isLogginDevice ? (
           <>
             <SuccessMessage successMessage={successMessage} />
-            <WordCloud />
-            {/* <WordCloud onSuccess={handleSuccessMessage} /> */}
+            <WordCloud onSuccess={handleSuccessMessage} />
             {/* <QnaLayout/> */}
           </>
         ) : (
