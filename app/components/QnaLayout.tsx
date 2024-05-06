@@ -65,7 +65,7 @@ export default function QnaLayout() {
   const handleSubmit = async (content: string) => {
     await addDocumentsAsync(currentUsername, content);
     dispatch(setIsAnswered(true));
-    dispatch(setSectionProps("wordClouds"));
+    dispatch(setSectionProps("qna"));
     dispatch(setChanceAnswer(0));
     dispatch(clearChanceAnswer());
     closeModal();
