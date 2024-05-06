@@ -25,6 +25,7 @@ import {
   setChanceAnswer,
   setIsAnswered,
 } from "./redux/wordSlice";
+import Polls from "./components/Polls";
 
 function ITPLogo(props: React.SVGProps<SVGSVGElement>) {
   return <Image src="/ITP.jpg" width={500} height={500} alt="ITP" />;
@@ -130,7 +131,9 @@ export default function Home() {
                         <WordCloud onSuccess={handleSuccessMessage} />
                       ) : item.active && item.section === "qna" ? (
                         <QnaLayout />
-                      ) : null;
+                      ) : (
+                        <Polls />
+                      );
                     })}
                   </>
                 )}
