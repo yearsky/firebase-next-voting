@@ -17,6 +17,7 @@ const persistedReducer = persistReducer(
   combineReducers({
     user: userReducer,
     answered: wordSlice,
+    questionSlice: questionSlice,
   })
 );
 
