@@ -8,9 +8,16 @@ interface CardProps {
   content: string;
   username: string;
   likes: number;
+  isStop: boolean;
 }
 
-const Card: React.FC<CardProps> = ({ id, content, username, likes }) => {
+const Card: React.FC<CardProps> = ({
+  id,
+  content,
+  username,
+  likes,
+  isStop,
+}) => {
   const [likeCount, setLikeCount] = useState(likes);
   const [isLiked, setIsLiked] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -36,7 +43,7 @@ const Card: React.FC<CardProps> = ({ id, content, username, likes }) => {
   }, [id]);
 
   const handleLikeClick = async () => {
-    if (!isLiked) {
+    if (!isLiked && !isStop) {
       const docRef = doc(database, "content", id);
       try {
         await updateDoc(docRef, {
@@ -62,7 +69,7 @@ const Card: React.FC<CardProps> = ({ id, content, username, likes }) => {
       <div className="absolute bottom-0 right-10 left-10">
         <button
           className={`border border-gray-500 bg-white p-1 rounded-full mb-2 mr-1 ${
-            isLiked ? "opacity-50 cursor-not-allowed" : ""
+            isLiked || isStop ? "opacity-50 cursor-not-allowed" : ""
           }`}
           onClick={handleLikeClick}
           style={{ animation: isAnimating ? "bounce 0.5s" : "" }} // Apply animation style

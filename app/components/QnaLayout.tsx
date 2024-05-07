@@ -30,6 +30,7 @@ export default function QnaLayout() {
   const currentUsername = useAppSelector(selectUsername);
   const successMessageRef = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<any[]>([]);
+  const [isStop, setIsStop] = useState(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -50,6 +51,20 @@ export default function QnaLayout() {
 
   useEffect(() => {
     try {
+      const triggerStop = onSnapshot(
+        query(collection(database, "triggerStopQna")),
+        { includeMetadataChanges: true },
+        (querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data.stop) {
+              setIsStop(true);
+            } else {
+              setIsStop(false);
+            }
+          });
+        }
+      );
       const unsubscribe = onSnapshot(
         query(
           collection(database, "content"),
@@ -66,19 +81,26 @@ export default function QnaLayout() {
         }
       );
 
-      return unsubscribe;
+      return () => {
+        unsubscribe();
+        triggerStop();
+      };
     } catch (error) {
       console.log("adaeerror:" + error);
     }
   }, []);
 
   const handleSubmit = async (content: string) => {
-    await addDocumentsAsync(currentUsername, content);
-    dispatch(setIsAnswered(true));
-    dispatch(setSectionProps("qna"));
-    dispatch(setChanceAnswer(0));
-    dispatch(clearChanceAnswer());
-    closeModal();
+    if (!isStop) {
+      await addDocumentsAsync(currentUsername, content);
+      dispatch(setIsAnswered(true));
+      dispatch(setSectionProps("qna"));
+      dispatch(setChanceAnswer(0));
+      dispatch(clearChanceAnswer());
+      closeModal();
+    } else {
+      console.log("Adding question is stopped");
+    }
   };
 
   async function addDocumentsAsync(username: any, content: any) {
@@ -113,6 +135,7 @@ export default function QnaLayout() {
       ) : (
         <Modal
           isOpen={isModalOpen}
+          isClosedQna={isStop}
           onClose={closeModal}
           section="qna"
           onSubmit={handleSubmit}
@@ -131,6 +154,7 @@ export default function QnaLayout() {
             <Card
               key={item.id}
               id={item.id}
+              isStop={isStop}
               username={item.username}
               content={item.content}
               likes={item.likes}

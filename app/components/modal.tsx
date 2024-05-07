@@ -25,6 +25,7 @@ interface ModalProps {
   section: string;
   onSubmit: (content: string) => void;
   onRadioChange?: (value: string) => void;
+  isClosedQna?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -33,6 +34,7 @@ const Modal: React.FC<ModalProps> = ({
   section,
   onSubmit,
   onRadioChange,
+  isClosedQna,
 }) => {
   const [text, setText] = useState("");
   const [content, setContent] = useState("");
@@ -74,6 +76,10 @@ const Modal: React.FC<ModalProps> = ({
     };
 
     fetchDataQuestions();
+
+    if (isClosedQna) {
+      isOpen;
+    }
   }, [content]);
 
   if (!isOpen) return null;
@@ -123,115 +129,129 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <div className="fixed z-50 top-0 left-0 w-full min-h-full flex items-center justify-center bg-gray-500 bg-opacity-50">
       <div className="bg-white rounded-lg p-6 flex flex-col xl:w-1/2 relative">
-        <div className="flex justify-center gap-2">
-          <span
-            className={`${
-              section == "wordClouds" ? "bg-blue-400" : "bg-blue-400"
-            } w-14 h-5 p-2 rounded-full`}
-          ></span>
-          <span
-            className={`${
-              section == "qna" || section == "Polls"
-                ? "bg-blue-400"
-                : "bg-gray-400"
-            } w-14 h-5 p-2 rounded-full`}
-          ></span>
-          <span
-            className={`${
-              section == "qna" ? "bg-blue-400" : "bg-gray-400"
-            } w-14 h-5 p-2 rounded-full`}
-          ></span>
-        </div>
-        <h4 className={`text-lg text-slate-500 text-center font-bold mt-5`}>
-          Pertanyaan Ke-
-          {section == "wordClouds" ? "1" : section == "Polls" ? "2" : "3"}
-        </h4>
-        <h2 className="mb-4 text-xl ">{questions}</h2>
-        {section == "Polls" ? (
+        {!isClosedQna && (
           <>
-            <div className="flex flex-col my-2">
-              <div className="flex items-center gap-x-2 p-2 border-2 rounded-lg my-2">
-                <input
-                  type="radio"
-                  name="chatType"
-                  disabled={isAnswered}
-                  value="Keluarga"
-                  onChange={handleRadioChange}
-                />
-                <label>Keluarga</label>
-              </div>
-              <div className="flex items-center gap-x-2 p-2 border-2 rounded-lg my-2">
-                <input
-                  type="radio"
-                  name="chatType"
-                  disabled={isAnswered}
-                  value="Pertemanan"
-                  onChange={handleRadioChange}
-                />
-                <label>Pertemanan</label>
-              </div>
-              <div className="flex items-center gap-x-2 p-2 border-2 rounded-lg my-2">
-                <input
-                  type="radio"
-                  name="chatType"
-                  disabled={isAnswered}
-                  value="Pekerjaan"
-                  onChange={handleRadioChange}
-                />
-                <label>Pekerjaan</label>
-              </div>
+            <div className="flex justify-center gap-2">
+              <span
+                className={`${
+                  section == "wordClouds" ? "bg-blue-400" : "bg-blue-400"
+                } w-14 h-5 p-2 rounded-full`}
+              ></span>
+              <span
+                className={`${
+                  section == "qna" || section == "Polls"
+                    ? "bg-blue-400"
+                    : "bg-gray-400"
+                } w-14 h-5 p-2 rounded-full`}
+              ></span>
+              <span
+                className={`${
+                  section == "qna" ? "bg-blue-400" : "bg-gray-400"
+                } w-14 h-5 p-2 rounded-full`}
+              ></span>
             </div>
-          </>
-        ) : (
-          <div className="relative">
-            <input
-              className="border border-gray-400 w-full p-3 xl:p-4 rounded-md"
-              placeholder="Isi Jawaban Kamu Disini👍"
-              value={content}
-              onChange={handleChange}
-              disabled={section == currentSection && isAnswered ? true : false}
-            />
-            <span className="absolute right-2 bottom-0 text-gray-500 text-sm">
-              {text.length}/{maxCharacters}
-            </span>
-          </div>
-        )}
-        <form onSubmit={handleSaveContent} className="flex justify-center">
-          {section === "Polls" && (
-            <button
-              className={`bg-blue-500 text-white text-center px-4 py-2 rounded-md mt-4 
+            <h4 className={`text-lg text-slate-500 text-center font-bold mt-5`}>
+              Pertanyaan Ke-
+              {section == "wordClouds" ? "1" : section == "Polls" ? "2" : "3"}
+            </h4>
+            <h2 className="mb-4 text-xl ">{questions}</h2>
+            {section == "Polls" ? (
+              <>
+                <div className="flex flex-col my-2">
+                  <div className="flex items-center gap-x-2 p-2 border-2 rounded-lg my-2">
+                    <input
+                      type="radio"
+                      name="chatType"
+                      disabled={isAnswered}
+                      value="Keluarga"
+                      onChange={handleRadioChange}
+                    />
+                    <label>Keluarga</label>
+                  </div>
+                  <div className="flex items-center gap-x-2 p-2 border-2 rounded-lg my-2">
+                    <input
+                      type="radio"
+                      name="chatType"
+                      disabled={isAnswered}
+                      value="Pertemanan"
+                      onChange={handleRadioChange}
+                    />
+                    <label>Pertemanan</label>
+                  </div>
+                  <div className="flex items-center gap-x-2 p-2 border-2 rounded-lg my-2">
+                    <input
+                      type="radio"
+                      name="chatType"
+                      disabled={isAnswered}
+                      value="Pekerjaan"
+                      onChange={handleRadioChange}
+                    />
+                    <label>Pekerjaan</label>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="relative">
+                <input
+                  className="border border-gray-400 w-full p-3 xl:p-4 rounded-md"
+                  placeholder="Isi Jawaban Kamu Disini👍"
+                  value={content}
+                  onChange={handleChange}
+                  disabled={
+                    section == currentSection && isAnswered ? true : false
+                  }
+                />
+                <span className="absolute right-2 bottom-0 text-gray-500 text-sm">
+                  {text.length}/{maxCharacters}
+                </span>
+              </div>
+            )}
+            <form onSubmit={handleSaveContent} className="flex justify-center">
+              {section === "Polls" && (
+                <button
+                  className={`bg-blue-500 text-white text-center px-4 py-2 rounded-md mt-4 
             ${
               radioValue == "" || (section == currentSection && isAnswered)
                 ? "disabled cursor-not-allowed bg-red-400 opacity-65"
                 : "opacity-1 bg-blue-500"
             }`}
-            >
-              {section == currentSection && isAnswered
-                ? "Jawaban Kamu Sudah Terkirim!🎉"
-                : "Kirim Jawaban"}
-            </button>
-          )}
-          {section !== "Polls" && (
-            <button
-              className={`bg-blue-500 text-white text-center px-4 py-2 rounded-md mt-4 
+                >
+                  {section == currentSection && isAnswered
+                    ? "Jawaban Kamu Sudah Terkirim!🎉"
+                    : "Kirim Jawaban"}
+                </button>
+              )}
+              {section !== "Polls" && (
+                <button
+                  className={`bg-blue-500 text-white text-center px-4 py-2 rounded-md mt-4 
             ${
               section == currentSection && isAnswered
                 ? "disabled cursor-not-allowed bg-red-400 opacity-65"
                 : "opacity-1 bg-blue-500"
             }`}
-            >
-              {section == currentSection && isAnswered
-                ? "Jawaban Kamu Berhasil Di Kirim!🎉"
-                : "Kirim Jawaban"}
-            </button>
-          )}
-        </form>
-        {section == "qna" ? (
-          <button className="absolute right-2 top-2" onClick={onClose}>
-            ❌
-          </button>
-        ) : (
-          ""
+                >
+                  {section == currentSection && isAnswered
+                    ? "Jawaban Kamu Berhasil Di Kirim!🎉"
+                    : "Kirim Jawaban"}
+                </button>
+              )}
+            </form>
+            {section == "qna" ? (
+              <button className="absolute right-2 top-2" onClick={onClose}>
+                ❌
+              </button>
+            ) : (
+              ""
+            )}
+          </>
+        )}
+
+        {isClosedQna && (
+          <div>
+            <h2>
+              Sesi QnA sudah berakhir, Terima kasih sudah berpatisipasi!❤️{" "}
+            </h2>
+          </div>
         )}
       </div>
     </div>
