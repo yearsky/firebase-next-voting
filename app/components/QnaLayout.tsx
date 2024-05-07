@@ -106,7 +106,7 @@ export default function QnaLayout() {
   async function addDocumentsAsync(username: any, content: any) {
     // const makePromise = [];
 
-    // for (let i = 0; i < 2000; i++) {
+    // for (let i = 0; i < 20; i++) {
     //   makePromise.push(promise);
     // }
     const promise = await addDoc(collection(database, "content"), {
@@ -149,7 +149,7 @@ export default function QnaLayout() {
           </h1>
         </div>
       ) : (
-        <div className="grid xl:grid-cols-4 w-full mt-20 gap-2 gap-y-4 h-[50vh] overflow-y-scroll overflow-x-hidden">
+        <div className="grid xl:grid-cols-4 w-full mt-20 gap-2 gap-y-4 ">
           {data.map((item) => (
             <Card
               key={item.id}

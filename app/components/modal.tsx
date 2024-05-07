@@ -100,16 +100,16 @@ const Modal: React.FC<ModalProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newText = e.target.value;
+
+    const trimmedText = newText.trim();
+
     setContent(newText);
-    if (newText.length <= maxCharacters) {
-      setText(newText);
+
+    if (trimmedText.length <= maxCharacters) {
+      setText(trimmedText);
     }
 
-    if (newText.length == 0) {
-      setDisabledBtn(true);
-    } else {
-      setDisabledBtn(false);
-    }
+    setDisabledBtn(trimmedText.length === 0 ? true : false);
   };
 
   const handleSaveContent = (e: FormEvent) => {
@@ -225,7 +225,7 @@ const Modal: React.FC<ModalProps> = ({
                 <button
                   className={`bg-blue-500 text-white text-center px-4 py-2 rounded-md mt-4 
             ${
-              section == currentSection && isAnswered
+              (section == currentSection && isAnswered) || disabledBtn
                 ? "disabled cursor-not-allowed bg-red-400 opacity-65"
                 : "opacity-1 bg-blue-500"
             }`}
