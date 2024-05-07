@@ -53,35 +53,30 @@ export default function Polls() {
   const [chartData, setChartData] = useState<any>(null); // State untuk menyimpan data dari Firestore
   const [radioValue, setRadioValue] = useState("");
   const [dataCategory, setDataCategory] = useState({
-    capability: 0,
-    clarity: 0,
-    continuity: 0,
-    channels: 0,
+    Keluarga: 0,
+    Pertemanan: 0,
+    Pekerjaan: 0,
   });
 
   useEffect(() => {
     async function fetchData() {
       const pollData: any[] = [];
       const categoryData: any = {
-        capability: 0,
-        clarity: 0,
-        continuity: 0,
-        channels: 0,
+        Keluarga: 0,
+        Pertemanan: 0,
+        Pekerjaan: 0,
       }; // Data sementara untuk menghitung kategori
       const querySnapshot = await getDocs(collection(database, "livePolls"));
       querySnapshot.forEach((doc) => {
         pollData.push(doc.data().text);
-        if (doc.data().text === "capability") {
-          categoryData.capability += 1;
+        if (doc.data().text === "Keluarga") {
+          categoryData.Keluarga += 1;
         }
-        if (doc.data().text === "clarity") {
-          categoryData.clarity += 1;
+        if (doc.data().text === "Pertemanan") {
+          categoryData.Pertemanan += 1;
         }
-        if (doc.data().text === "continuity") {
-          categoryData.continuity += 1;
-        }
-        if (doc.data().text === "channels") {
-          categoryData.channels += 1;
+        if (doc.data().text === "Pekerjaan") {
+          categoryData.Pekerjaan += 1;
         }
       });
       setChartData(pollData);
@@ -119,28 +114,22 @@ export default function Polls() {
     labels: ["Hasil Akhir Live Polls"],
     datasets: [
       {
-        label: "Clarity",
-        data: [dataCategory.clarity],
+        label: "Keluarga",
+        data: [dataCategory.Keluarga],
         borderColor: "rgb(255, 99, 132)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",
       },
       {
-        label: "Continuity & Consistency",
-        data: [dataCategory.continuity], // Dataset kedua
+        label: "Pertemanan",
+        data: [dataCategory.Pertemanan], // Dataset kedua
         borderColor: "rgb(54, 162, 235)",
         backgroundColor: "rgba(54, 162, 235, 0.5)",
       },
       {
-        label: "Capability of Audience",
-        data: [dataCategory.capability],
+        label: "Pekerjaan",
+        data: [dataCategory.Pekerjaan],
         borderColor: "rgb(75, 192, 192)",
         backgroundColor: "rgba(75, 192, 192, 0.5)",
-      },
-      {
-        label: "Channels Of Distribution",
-        data: [dataCategory.channels], // Dataset ketiga
-        borderColor: "rgb(75, 192, 192)",
-        backgroundColor: "rgba(75, 122, 192, 0.5)",
       },
     ],
   };

@@ -26,6 +26,7 @@ import {
   setIsAnswered,
 } from "./redux/wordSlice";
 import Polls from "./components/Polls";
+import { error } from "console";
 
 function ITPLogo(props: React.SVGProps<SVGSVGElement>) {
   return <Image src="/ITP.jpg" width={500} height={500} alt="ITP" />;
@@ -62,18 +63,27 @@ export default function Home() {
       setIsLoggedIn(true);
       setUsernameState(storedUsername);
 
-      const unsubscribe = onSnapshot(
-        query(collection(database, "activeSections")),
-        (querySnapshot) => {
-          const dataArray = querySnapshot.docs.map((doc) => ({
-            ...doc.data(),
-          }));
-          setData(dataArray);
-          setIsDataUpdated(true);
-        }
-      );
+      try {
+        const unsubscribe = onSnapshot(
+          query(collection(database, "activeSections")),
+          { includeMetadataChanges: true },
+          (querySnapshot) => {
+            const dataArray = querySnapshot.docs.map((doc) => ({
+              ...doc.data(),
+            }));
+            setData(dataArray);
+            setIsDataUpdated(true);
+          },
 
-      return unsubscribe;
+          (error) => {
+            console.log("ada error nich:" + error);
+          }
+        );
+
+        return unsubscribe;
+      } catch (error) {
+        console.log("erorrw" + error);
+      }
     }
 
     return () => clearTimeout(timer);

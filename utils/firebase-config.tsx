@@ -1,7 +1,12 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
-import { getFirestore } from "firebase/firestore";
+import {
+  getFirestore,
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+} from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -32,8 +37,13 @@ const firebaseConfigSecondary = {
 };
 
 // Initialize Firebase untuk aplikasi pertama
-export const app = initializeApp(firebaseConfigSecondary);
-export const database = getFirestore(app);
+export const app = initializeApp(firebaseConfig);
+// export const database = getFirestore(app);
+export const database = initializeFirestore(app, {
+  localCache: persistentLocalCache(
+    /*settings*/ { tabManager: persistentMultipleTabManager() }
+  ),
+});
 
 // // Initialize Firebase untuk aplikasi kedua
 // export const appSecondary = initializeApp(firebaseConfigSecondary);

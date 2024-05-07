@@ -193,7 +193,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ onSuccess }) => {
       setIsLoading(true);
       await getQuestions();
     } catch (error) {
-      console.log(error);
+      console.log("error" + error);
     } finally {
       setIsLoading(false);
     }

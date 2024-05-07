@@ -155,40 +155,30 @@ const Modal: React.FC<ModalProps> = ({
                   type="radio"
                   name="chatType"
                   disabled={isAnswered}
-                  value="clarity"
+                  value="Keluarga"
                   onChange={handleRadioChange}
                 />
-                <label>Clarity</label>
+                <label>Keluarga</label>
               </div>
               <div className="flex items-center gap-x-2 p-2 border-2 rounded-lg my-2">
                 <input
                   type="radio"
                   name="chatType"
                   disabled={isAnswered}
-                  value="continuity"
+                  value="Pertemanan"
                   onChange={handleRadioChange}
                 />
-                <label>Continuity & Consistency</label>
+                <label>Pertemanan</label>
               </div>
               <div className="flex items-center gap-x-2 p-2 border-2 rounded-lg my-2">
                 <input
                   type="radio"
                   name="chatType"
                   disabled={isAnswered}
-                  value="capability"
+                  value="Pekerjaan"
                   onChange={handleRadioChange}
                 />
-                <label>Capability of Audience</label>
-              </div>
-              <div className="flex items-center gap-x-2 p-2 border-2 rounded-lg my-2">
-                <input
-                  type="radio"
-                  name="chatType"
-                  value="channels"
-                  disabled={isAnswered}
-                  onChange={handleRadioChange}
-                />
-                <label>Channels Of Distribution</label>
+                <label>Pekerjaan</label>
               </div>
             </div>
           </>

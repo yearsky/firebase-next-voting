@@ -49,22 +49,31 @@ export default function QnaLayout() {
   };
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      query(
-        collection(database, "content"),
-        orderBy("likes", "desc"),
-        limit(250)
-      ),
-      (querySnapshot) => {
-        const dataArray = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setData(dataArray);
-      }
-    );
+    try {
+      const unsubscribe = onSnapshot(
+        query(
+          collection(database, "content"),
+          orderBy("likes", "desc"),
+          limit(250)
+        ),
+        { includeMetadataChanges: true },
+        (querySnapshot) => {
+          const dataArray = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setData(dataArray);
+          const source = querySnapshot.metadata.fromCache
+            ? "local cache"
+            : "server";
+          console.log("Data came from " + source);
+        }
+      );
 
-    return unsubscribe;
+      return unsubscribe;
+    } catch (error) {
+      console.log("adaeerror:" + error);
+    }
   }, []);
 
   const handleSubmit = async (content: string) => {
