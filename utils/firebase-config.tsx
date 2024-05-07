@@ -25,25 +25,27 @@ const firebaseConfig = {
 
 // Konfigurasi Firebase untuk aplikasi web kedua
 const firebaseConfigSecondary = {
-  apiKey: "AIzaSyBjjV7kKu76YQoOISrFxgmGUDRD9E2Hhu8",
-  authDomain: "nextjs-voting.firebaseapp.com",
-  databaseURL:
-    "https://nextjs-voting-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "nextjs-voting",
-  storageBucket: "nextjs-voting.appspot.com",
-  messagingSenderId: "909153346392",
-  appId: "1:909153346392:web:136fcc6c40f317a5667b2d",
-  measurementId: "G-01WWQK735C",
+  apiKey: "AIzaSyDJ6kYeARzvUwTOg3lrqqgnZEWoDH3lp4A",
+  authDomain: "fir-tutor-19431.firebaseapp.com",
+  databaseURL: "https://fir-tutor-19431.firebaseio.com",
+  projectId: "fir-tutor-19431",
+  storageBucket: "fir-tutor-19431.appspot.com",
+  messagingSenderId: "1009325914776",
+  appId: "1:1009325914776:web:624779cee91c3a21d3aeed",
 };
 
 // Initialize Firebase untuk aplikasi pertama
-export const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfigSecondary);
 // export const database = getFirestore(app);
-export const database = initializeFirestore(app, {
-  localCache: persistentLocalCache(
-    /*settings*/ { tabManager: persistentMultipleTabManager() }
-  ),
-});
+export const database = initializeFirestore(
+  app,
+  {
+    localCache: persistentLocalCache(
+      /*settings*/ { tabManager: persistentMultipleTabManager() }
+    ),
+  },
+  "backup"
+);
 
 // // Initialize Firebase untuk aplikasi kedua
 // export const appSecondary = initializeApp(firebaseConfigSecondary);

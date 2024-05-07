@@ -86,6 +86,11 @@ export default function QnaLayout() {
   };
 
   async function addDocumentsAsync(username: any, content: any) {
+    // const makePromise = [];
+
+    // for (let i = 0; i < 2000; i++) {
+    //   makePromise.push(promise);
+    // }
     const promise = await addDoc(collection(database, "content"), {
       likes: 0,
       username: username,
@@ -97,9 +102,8 @@ export default function QnaLayout() {
 
   return (
     <>
-      <h2 className="text-md sm:text-xl mx-4">
-        Yukk, Jawab pertanyaan yang sudah diberikan! Ada Voucher senilai jutaan
-        menanti kamu(kalau beruntung)😎
+      <h2 className="text-md sm:text-xl mx-4 font-semibold">
+        Yukk, Ajukan pertanyaan! Like Terbanyak Akan Mendapatkan Hadiah😎
       </h2>
 
       <button

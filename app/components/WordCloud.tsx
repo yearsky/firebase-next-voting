@@ -118,6 +118,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ onSuccess }) => {
     if (currentUsername === "ITPGo123") {
       const unsubscribe = onSnapshot(
         query(collection(database, "wordClouds"), orderBy("createdAt", "desc")),
+        { includeMetadataChanges: true },
         (snapshot) => {
           const dataArray = snapshot.docs.map((doc) => ({
             text: doc.data().text,

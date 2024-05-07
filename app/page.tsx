@@ -121,7 +121,7 @@ export default function Home() {
           <ITPLogo className="h-8 sm:h-16 invert p-3 mb-1" />
         </div>
         <h1 className="text-lg sm:text-2xl font-bold mb-2 text-white">
-          ITP SUNDAY - KOMUNIKASI🎉
+          13th Sunday ITP - Basic Communication
         </h1>
         {isLogginDevice ? (
           <>
