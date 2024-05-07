@@ -110,7 +110,6 @@ export default function Polls() {
   }
 
   if (!chartData) return <div>Loading...</div>;
-  console.log(dataCategory.capability);
 
   const data = {
     labels: ["Hasil Akhir Live Polls"],

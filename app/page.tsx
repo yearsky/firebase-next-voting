@@ -103,14 +103,14 @@ export default function Home() {
   const handleSuccessMessage = () => {
     setSuccessMessage(true);
   };
-  console.log(data);
+
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen">
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-orange-500">
       <main className="flex flex-col items-center flex-1 px-4 sm:px-20 text-center">
         <div className="flex justify-center items-center bg-white rounded-full w-16 sm:w-24 h-16 sm:h-24 my-8">
           <ITPLogo className="h-8 sm:h-16 invert p-3 mb-1" />
         </div>
-        <h1 className="text-lg sm:text-2xl font-bold mb-2">
+        <h1 className="text-lg sm:text-2xl font-bold mb-2 text-white">
           ITP SUNDAY - KOMUNIKASI🎉
         </h1>
         {isLogginDevice ? (
@@ -120,7 +120,7 @@ export default function Home() {
               <>
                 {isDataUpdated ? (
                   <div className="flex justify-center items-center h-[50vh]">
-                    <h2 className="text-center font-bold animate-bounce">
+                    <h2 className="text-center font-bold animate-bounce text-white">
                       Tunggu Sebentar ya!😁
                     </h2>
                   </div>

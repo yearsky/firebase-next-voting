@@ -85,7 +85,7 @@ export default function QnaLayout() {
     <>
       <h2 className="text-md sm:text-xl mx-4">
         Yukk, Jawab pertanyaan yang sudah diberikan! Ada Voucher senilai jutaan
-        menanti kamu😎
+        menanti kamu(kalau beruntung)😎
       </h2>
 
       <button

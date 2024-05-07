@@ -10,12 +10,14 @@ import {
   query,
 } from "firebase/firestore";
 import { ref } from "firebase/storage";
-import { useAppSelector } from "../redux/store";
+import { useAppDispatch, useAppSelector } from "../redux/store";
 import {
   chanceAnswer,
   currentSectionChange,
   selectAnswer,
+  setIsAnswered,
 } from "../redux/wordSlice";
+import { dispatch } from "d3";
 
 interface ModalProps {
   isOpen: boolean;
@@ -34,16 +36,28 @@ const Modal: React.FC<ModalProps> = ({
 }) => {
   const [text, setText] = useState("");
   const [content, setContent] = useState("");
+  const dispatch = useAppDispatch();
   const isAnswered = useAppSelector(selectAnswer);
   const chanceAnswerQuestion = useAppSelector(chanceAnswer);
   const currentSection = useAppSelector(currentSectionChange);
   const [questions, setQuestions] = useState("");
+  const [radioValue, setRadioValue] = useState("");
   const maxCharacters =
     section == "wordClouds" ? 20 : section == "QnA" ? 200 : 200;
   const [disabledBtn, setDisabledBtn] = useState(true);
 
   useEffect(() => {
     disabledButtonChange();
+
+    if (isAnswered && section === "Polls") {
+      console.log(21);
+      const radios = document.querySelectorAll<HTMLInputElement>(
+        'input[type="radio"]'
+      );
+      radios.forEach((radio) => {
+        radio.disabled = true;
+      });
+    }
 
     const fetchDataQuestions = async () => {
       const q = query(
@@ -57,7 +71,7 @@ const Modal: React.FC<ModalProps> = ({
     };
 
     fetchDataQuestions();
-  }, [content]);
+  }, [content, isAnswered]);
 
   if (!isOpen) return null;
 
@@ -100,11 +114,11 @@ const Modal: React.FC<ModalProps> = ({
 
   const handleRadioChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    setRadioValue(value);
     if (onRadioChange) {
       onRadioChange(value);
     }
   };
-  console.log(currentSection, "", section);
   return (
     <div className="fixed z-50 top-0 left-0 w-full min-h-full flex items-center justify-center bg-gray-500 bg-opacity-50">
       <div className="bg-white rounded-lg p-6 flex flex-col xl:w-1/2 relative">
@@ -139,6 +153,7 @@ const Modal: React.FC<ModalProps> = ({
                 <input
                   type="radio"
                   name="chatType"
+                  disabled={isAnswered}
                   value="clarity"
                   onChange={handleRadioChange}
                 />
@@ -148,6 +163,7 @@ const Modal: React.FC<ModalProps> = ({
                 <input
                   type="radio"
                   name="chatType"
+                  disabled={isAnswered}
                   value="continuity"
                   onChange={handleRadioChange}
                 />
@@ -157,6 +173,7 @@ const Modal: React.FC<ModalProps> = ({
                 <input
                   type="radio"
                   name="chatType"
+                  disabled={isAnswered}
                   value="capability"
                   onChange={handleRadioChange}
                 />
@@ -167,6 +184,7 @@ const Modal: React.FC<ModalProps> = ({
                   type="radio"
                   name="chatType"
                   value="channels"
+                  disabled={isAnswered}
                   onChange={handleRadioChange}
                 />
                 <label>Channels Of Distribution</label>
@@ -188,18 +206,34 @@ const Modal: React.FC<ModalProps> = ({
           </div>
         )}
         <form onSubmit={handleSaveContent} className="flex justify-center">
-          <button
-            className={`bg-blue-500 text-white text-center px-4 py-2 rounded-md mt-4 
+          {section === "Polls" && (
+            <button
+              className={`bg-blue-500 text-white text-center px-4 py-2 rounded-md mt-4 
+            ${
+              radioValue == "" || (section == currentSection && isAnswered)
+                ? "disabled cursor-not-allowed bg-red-400 opacity-65"
+                : "opacity-1 bg-blue-500"
+            }`}
+            >
+              {section == currentSection && isAnswered
+                ? "Jawaban Kamu Sudah Terkirim!🎉"
+                : "Kirim Jawaban"}
+            </button>
+          )}
+          {section !== "Polls" && (
+            <button
+              className={`bg-blue-500 text-white text-center px-4 py-2 rounded-md mt-4 
             ${
               section == currentSection && isAnswered
                 ? "disabled cursor-not-allowed bg-red-400 opacity-65"
                 : "opacity-1 bg-blue-500"
             }`}
-          >
-            {section == currentSection && isAnswered
-              ? "Jawaban Kamu Berhasil Di Kirim!🎉"
-              : "Kirim Jawaban"}
-          </button>
+            >
+              {section == currentSection && isAnswered
+                ? "Jawaban Kamu Berhasil Di Kirim!🎉"
+                : "Kirim Jawaban"}
+            </button>
+          )}
         </form>
         {section == "qna" ? (
           <button className="absolute right-2 top-2" onClick={onClose}>
