@@ -91,10 +91,14 @@ export default function Polls() {
   }, []);
 
   const handleSubmitPolls = async () => {
-    await addDocumentsAsync(radioValue);
-    dispatch(setIsAnswered(true));
-    dispatch(setSectionProps("Polls"));
-    dispatch(setChanceAnswer(0));
+    try {
+      await addDocumentsAsync(radioValue);
+      dispatch(setIsAnswered(true));
+      dispatch(setSectionProps("Polls"));
+      dispatch(setChanceAnswer(0));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleRadioChange = (value: string) => {

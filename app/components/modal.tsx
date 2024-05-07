@@ -47,15 +47,18 @@ const Modal: React.FC<ModalProps> = ({
   const [disabledBtn, setDisabledBtn] = useState(true);
 
   useEffect(() => {
-    disabledButtonChange();
+    // disabledButtonChange();
 
-    if (isAnswered && section === "Polls") {
-      console.log(21);
-      const radios = document.querySelectorAll<HTMLInputElement>(
-        'input[type="radio"]'
-      );
+    const radios = document.querySelectorAll<HTMLInputElement>(
+      'input[type="radio"]'
+    );
+    if (isAnswered && section === "Polls" && chanceAnswerQuestion === 0) {
       radios.forEach((radio) => {
         radio.disabled = true;
+      });
+    } else {
+      radios.forEach((radio) => {
+        radio.disabled = false;
       });
     }
 
@@ -71,7 +74,7 @@ const Modal: React.FC<ModalProps> = ({
     };
 
     fetchDataQuestions();
-  }, [content, isAnswered]);
+  }, [content]);
 
   if (!isOpen) return null;
 
@@ -105,11 +108,9 @@ const Modal: React.FC<ModalProps> = ({
 
   const handleSaveContent = (e: FormEvent) => {
     e.preventDefault();
-    if (!disabledBtn) {
-      onSubmit(content);
-      setContent("");
-      setText("");
-    }
+    onSubmit(content);
+    setContent("");
+    setText("");
   };
 
   const handleRadioChange = (e: ChangeEvent<HTMLInputElement>) => {
