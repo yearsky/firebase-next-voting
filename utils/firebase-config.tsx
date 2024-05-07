@@ -44,7 +44,7 @@ export const database = initializeFirestore(
       /*settings*/ { tabManager: persistentMultipleTabManager() }
     ),
   },
-  "backup"
+  "sunday-backup"
 );
 
 // // Initialize Firebase untuk aplikasi kedua
