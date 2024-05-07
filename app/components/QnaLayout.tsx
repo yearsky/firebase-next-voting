@@ -63,10 +63,6 @@ export default function QnaLayout() {
             ...doc.data(),
           }));
           setData(dataArray);
-          const source = querySnapshot.metadata.fromCache
-            ? "local cache"
-            : "server";
-          console.log("Data came from " + source);
         }
       );
 
