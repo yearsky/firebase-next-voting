@@ -6,6 +6,7 @@ import {
   addDoc,
   collection,
   getDocs,
+  limit,
   onSnapshot,
   orderBy,
   query,
@@ -49,7 +50,11 @@ export default function QnaLayout() {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      query(collection(database, "content"), orderBy("likes", "desc")),
+      query(
+        collection(database, "content"),
+        orderBy("likes", "desc"),
+        limit(250)
+      ),
       (querySnapshot) => {
         const dataArray = querySnapshot.docs.map((doc) => ({
           id: doc.id,
